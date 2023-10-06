@@ -1,27 +1,22 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class Alumno {
-
-    private String nombre;
+public class Alumno implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String apellidos;
-    private Date fNacimiento;
-    private  String ciclo;
+    private String nombre;
+    private String fNacimiento;
+    private String ciclo;
 
+    public Alumno() {
 
-    public Alumno(String nombre, String apellidos, Date fNacimiento, String ciclo) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.fNacimiento = fNacimiento;
-        this.ciclo = ciclo;
     }
 
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
+    public Alumno(String appellidos, String nombre, String fnacimiento,String ciclo ) {
+        this.apellidos = appellidos;
         this.nombre = nombre;
+        this.fNacimiento = fnacimiento;
+        this.ciclo= ciclo;
     }
 
     public String getApellidos() {
@@ -32,25 +27,20 @@ public class Alumno {
         this.apellidos = apellidos;
     }
 
-    public Date getfNacimiento() {
-        return fNacimiento;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setfNacimiento(Date fNacimiento) {
-        this.fNacimiento = fNacimiento;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getCiclo() {
-        return ciclo;
-    }
+    public String getfNacimiento() {return fNacimiento;}
 
-    public void setCiclo(String ciclo) {
-        this.ciclo = ciclo;
-    }
+    public void setfNacimiento(String fNacimiento) {this.fNacimiento = fNacimiento;}
 
-    @Override
-    public String toString() {
-        return nombre + " " + apellidos  +" " + fNacimiento + " " +ciclo;
+    public String getCiclo() {return ciclo;}
 
-    }
+    public void setCiclo(String ciclo) {this.ciclo = ciclo;}
+
 }
