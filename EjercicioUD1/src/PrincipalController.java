@@ -41,6 +41,10 @@ public class PrincipalController implements ActionListener, ListSelectionListene
         vista.btGuardar.addActionListener(alistener);
         vista.btNuevo.addActionListener(alistener);
         vista.listaAlumnos.addListSelectionListener(llistener);
+        vista.btPrimero.addActionListener(alistener);
+        vista.btAnterior.addActionListener(alistener);
+        vista.btSiguiente.addActionListener(alistener);
+        vista.btUltimo.addActionListener(alistener);
     }
 
     @Override
@@ -57,7 +61,14 @@ public class PrincipalController implements ActionListener, ListSelectionListene
            //     break;
             case "Exportar": exportarAlumnos();
                 break;
-            default:
+            case "Siguiente": siguiente();
+            break;
+            case "Anterior": anterior();
+                break;
+            case "Primero": primero();
+                break;
+            case "Ultimo": ultimo();
+                default:
                 break;
         }
     }
@@ -72,10 +83,20 @@ public class PrincipalController implements ActionListener, ListSelectionListene
                 posicion=aux;//La posición es válida, por lo que la establezco como el nuevo valor de nuestra variable posición
                 Alumno alumno = alumnos.get(posicion);/*Seleccionamos el correspondiente alumno de nuestra lista y rellenamos los
                 campos Nombre y DNI con su información*/
-                vista.tfApellidos.setText(alumno.getApellidos());
                 vista.tfNombre.setText(alumno.getNombre());
+                vista.tfApellidos.setText(alumno.getApellidos());
                 vista.tfFNacimiento.setText((alumno.getfNacimiento()));
 
+                for (int i = 0; i < vista.cbCiclo.getItemCount(); i++)
+                {
+                    String auxiliar = vista.cbCiclo.getItemAt(i);
+
+                    if (auxiliar.equals(alumno.getCiclo()))
+                    {
+                        vista.cbCiclo.setSelectedIndex(i);
+                    }
+
+                }
             }
         }
     }
@@ -90,15 +111,72 @@ public class PrincipalController implements ActionListener, ListSelectionListene
 
     }
 
+    private boolean fechaFormateada()
+    {
+
+
+        boolean formateau = true;
+        try
+        {
+            String[] partes = vista.tfFNacimiento.getText().split("-");
+
+                for (int i = 0; i < partes.length ; i++)
+                {
+
+
+                    if (partes[i].length()>2 || partes[i].length() <= 0 )
+                    {
+                        formateau = false;
+
+                        if(i == 2 && ((Integer.parseInt(partes[i])>0) && partes[i].length() == 4) )
+                        {
+                            formateau = true;
+                        }
+                    }
+                    boolean numero = false;
+                    try
+                    {
+
+                        int fecha = Integer.parseInt(partes[i]);
+                        if(i <2)
+                        {
+                            if (i == 1 && (fecha<=12 && fecha >0) )
+                            {
+                                numero = true;
+                            }
+                            if(i == 0 && (fecha > 0 && fecha <=31))
+                            {
+                                numero = true;
+                            }
+                        }
+                    }catch(Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return formateau;
+    }
+
+
     private void guardarAlumno(){//Aquí nos quedamos
         String nombre=vista.tfNombre.getText();//Aquí recuperamos la información que hay en el campo de texto nombre
         String apellidos=vista.tfApellidos.getText();//Aquí recuperamos la información que hay en el campo de texto DNI
         String fNacimiento = vista.tfFNacimiento.getText();
         String ciclo = vista.cbCiclo.getSelectedItem().toString();
+        boolean fechaformateada = fechaFormateada();
 
-        if(!(nombre.isEmpty()||apellidos.isEmpty()||fNacimiento.isEmpty()||ciclo.isEmpty())){//Aquí validamos los datos, comprobamos que no son campos vacíos
+
+        if(!(nombre.isEmpty()||apellidos.isEmpty()||fNacimiento.isEmpty()||ciclo.isEmpty()) && fechaformateada){//Aquí validamos los datos, comprobamos que no son campos vacíos
             if(posicion<0){/*Habíamos establecido que si la posición que teníamos en memoria era negativa es porque
             queríamos insertar un nuevo alumno en nuestra lista de alumnos*/
+
+
                 modeloLista.add(modeloLista.getSize(),nombre+" "+apellidos+" "+fNacimiento+" "+ciclo);/*Aquí añadimos al final de la lista que
                 almacena la información que muestra el JList (sólo almacena Strings) un nuevo alumno en formato String*/
                 Alumno alumno=new Alumno(nombre,apellidos,fNacimiento,ciclo);//Creamos un objeto de la clase alumno con la información recogida
@@ -114,6 +192,10 @@ public class PrincipalController implements ActionListener, ListSelectionListene
                 alumnos.set(posicion,alumno);/*Editamos el alumno en nuestra lista de la clase alumno para la posición dada
                 con el objeto de la clase alumno que hemos creado anteriormente*/
             }
+        }else if(!fechaformateada)
+        {
+
+            vista.showError();
         }
     }
 
@@ -143,28 +225,6 @@ public class PrincipalController implements ActionListener, ListSelectionListene
         }
     }
 
-  /*private void importarAlumnos(){
-        JFileChooser fileChooser = new JFileChooser();//Creamos una instancia del diálogo que vamos a usar para seleccionar un archivo
-        fileChooser.setDialogTitle("Especifica desde qué archivo vas a importar los datos");//Le ponemos un título al diálogo
-        int userSelection = fileChooser.showSaveDialog(vista.btImportar);/*Se muestra el diálogo pasando como argumento el botón que
-        hemos usado para invocarlo*//*
-        if (userSelection == JFileChooser.APPROVE_OPTION) {//Si se ha aceptado la selección de un archivo
-        File fileToSave = fileChooser.getSelectedFile();/*Aquí asignamos a una variable el fichero que vamos a utilizar y que hemos
-            seleccionado previamente*/
-       /* String ruta=fileToSave.getAbsolutePath();//Aquí extraemos la ruta absoluta en la que se encuentra el fichero
-        String[] partes=ruta.split("\\.");//Dividimos la ruta absoluta usando el punto que delimita la extensión del fichero
-        if(partes[partes.length-1].equals("txt")){/*En la última posición del array de strings debería estar la extensión del fichero.
-            Según la extensión del fichero guardaremos los datos como XML, texto plano o los serializaremos por defecto*/
-        /*    leerFicheroTextoPlano(ruta);
-        }
-        else if(partes[partes.length-1].equals("xml")){
-            leerFicheroXML(ruta);
-        }
-        else{
-            deserializarAlumnos(ruta);
-        }
-    }
-} */
 
     public void leerFicheroTextoPlano(String ruta) {
         alumnos.clear();//Borramos la información que pudiéramos tener almacenada en las distintas listas
@@ -203,64 +263,31 @@ public class PrincipalController implements ActionListener, ListSelectionListene
         }
     }
 
-    /*public void leerFicheroXML(String ruta) {//En los ejemplos del tema se explicó paso a paso cómo funciona la lectura de un fichero XML
-        alumnos.clear();
-        modeloLista.clear();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document documento = builder.parse(new File(ruta));
-            NodeList auxnos = documento.getElementsByTagName("alumno");
-            for (int i = 0; i < auxnos.getLength(); i++) {
-                Node producto = auxnos.item(i);
-                Element elemento = (Element) producto;
-                String dni=elemento.getElementsByTagName("dni").item(0)
-                        .getChildNodes().item(0).getNodeValue();
-                String nombre=elemento.getElementsByTagName("nombre").item(0)
-                        .getChildNodes().item(0).getNodeValue();
-                Alumno alumno = new Alumno(dni, nombre);
-                alumnos.add(alumno);
-                modeloLista.add(i, dni + ": " + nombre);
-            }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
+    private void siguiente()
+    {
+        if(posicion < modeloLista.getSize() -1 )
+        {
+            posicion++;
+            vista.listaAlumnos.setSelectedIndex(posicion);
         }
-    }*/
+    }
 
-    /*public void deserializarAlumnos(String ruta){
-        alumnos.clear();
-        modeloLista.clear();
-        ObjectInputStream deserializador = null;
-        try {
-            deserializador = new ObjectInputStream(new FileInputStream(ruta));//En el objectinputstream se almacena la información
-            //que estaba contenida en el archivo que se le pasa como ruta
-            alumnos = (ArrayList<Alumno>) deserializador.readObject();//Como previamente habíamos serializado un ArrayList de alumnos,
-            //podemos obtener esta información desde el objectinputstream si el fichero de importación escogido es el correcto
-            for (int i=0;i<alumnos.size();++i) {//Recorremos la lista de alumnos y añadimos esa información al JList
-              /*  Alumno alumno=alumnos.get(i);
-                String nombre=alumno.getNombre();
-                String dni=alumno.getApellidos();
-                modeloLista.add(i, dni + ": " + nombre);
-            }
-        } catch (FileNotFoundException fnfe ) {//Manejo de excepciones
-            fnfe.printStackTrace();
-        } catch (ClassNotFoundException cnfe ) {
-            cnfe.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } finally {
-            if (deserializador != null)
-                try {
-                    deserializador.close();//Cerramos el fichero si no ha habido ningún problema
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                }
+    private void anterior()
+    {
+        if(posicion > 0)
+        {
+            posicion--;
+            vista.listaAlumnos.setSelectedIndex(posicion);
         }
-    }*/
+    }
+private void primero()
+{
+    vista.listaAlumnos.setSelectedIndex(0);
+}
+private  void ultimo()
+{
+    vista.listaAlumnos.setSelectedIndex(modeloLista.getSize()-1);
+}
 
     private void exportarAlumnos(){
         if(!alumnos.isEmpty()) {//Comprobamos que hay alumnos que exportar al fichero
@@ -279,8 +306,8 @@ public class PrincipalController implements ActionListener, ListSelectionListene
                     escribirFicheroXML(alumnos,ruta);
                 }
                 else{
-                    ruta=partes[0]+".dat";
                     serializarAlumnos(alumnos,ruta);
+                    ruta=partes[0]+".dat";
                 }
             }
         }

@@ -12,9 +12,9 @@ public class Alumno implements Serializable {
 
     }
 
-    public Alumno(String appellidos, String nombre, String fnacimiento,String ciclo ) {
-        this.apellidos = appellidos;
+    public Alumno(String nombre, String appellidos, String fnacimiento,String ciclo ) {
         this.nombre = nombre;
+        this.apellidos = appellidos;
         this.fNacimiento = fnacimiento;
         this.ciclo= ciclo;
     }
