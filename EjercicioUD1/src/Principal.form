@@ -8,14 +8,6 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="b7e90" class="javax.swing.JButton" binding="btExportar">
-        <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Exportar"/>
-        </properties>
-      </component>
       <component id="b3b1a" class="javax.swing.JLabel" binding="lApellidos">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
@@ -86,30 +78,6 @@
           <text value="Guardar"/>
         </properties>
       </component>
-      <component id="7aaa" class="javax.swing.JButton" binding="btPrimero">
-        <constraints>
-          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Primero"/>
-        </properties>
-      </component>
-      <component id="eefce" class="javax.swing.JButton" binding="btUltimo">
-        <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Ultimo"/>
-        </properties>
-      </component>
-      <component id="df14c" class="javax.swing.JButton" binding="btSiguiente">
-        <constraints>
-          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Siguiente"/>
-        </properties>
-      </component>
       <scrollpane id="97e2">
         <constraints>
           <grid row="0" column="3" row-span="5" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -134,12 +102,20 @@
           <text value="Nuevo"/>
         </properties>
       </component>
-      <component id="11b6c" class="javax.swing.JButton" binding="btAnterior">
+      <component id="58e3b" class="javax.swing.JCheckBox" binding="mySQLCheckBox" default-binding="true">
         <constraints>
-          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Anterior"/>
+          <text value="MySQL"/>
+        </properties>
+      </component>
+      <component id="71904" class="javax.swing.JCheckBox" binding="PSQLCheckBox" default-binding="true">
+        <constraints>
+          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="PSQL"/>
         </properties>
       </component>
     </children>
