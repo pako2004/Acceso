@@ -17,10 +17,10 @@ public class Alumno implements Serializable {
 
     }
 
-    public Alumno(String nombre, String appellidos, String fnacimiento,int ciclo ) {
+    public Alumno(String nombre, String appellidos, Date fnacimiento,int ciclo ) {
         this.nombre = nombre;
         this.apellidos = appellidos;
-        this.fNacimiento = fnacimiento;
+        this.fechaNacimiento = fnacimiento;
         this.ciclo= ciclo;
     }
 
@@ -57,7 +57,7 @@ public class Alumno implements Serializable {
     public void setFechaNacimiento(Date fechaNacimiento) {this.fechaNacimiento = fechaNacimiento;}
 
     public java.sql.Date getSQLNacimiento(){
-        return new java.sql.Date(fechaNacimiento.getTime());
+        return new java.sql.Date(this.fechaNacimiento.getTime());
     }
 
 

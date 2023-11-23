@@ -52,7 +52,7 @@ public class DBHelper {
         else{
             conexion=this.conectarPostgreSQL("ejemplostema2","postgres","postgres");
         }
-        ArrayList<Alumno> Alumnos=this.getUsuarios(conexion);//Aquí recuperamos la lista de ususarios usando el método que creamos anteriormente
+        ArrayList<Alumno> Alumnos=this.getAlumnos(conexion);//Aquí recuperamos la lista de ususarios usando el método que creamos anteriormente
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         if(mysql) {//Imprimos la información en consola
             System.out.println("MySQL:");
@@ -72,21 +72,21 @@ public class DBHelper {
     public void insertarAlumno(boolean mysql, Alumno alumno){
         Connection conexion;
         if(mysql){//De nuevo elegimos el tipo de conexión que realizamos
-            conexion=this.conectarMySQL("ejemplostema2","root","luisrodriguez");
+            conexion=this.conectarMySQL("actividades","root","luisrodriguez");
         }
         else{
-            conexion=this.conectarPostgreSQL("ejemplostema2","postgres","postgres");
+            conexion=this.conectarPostgreSQL("actividades","postgres","postgres");
         }
-        String sentenciaSql = "INSERT INTO alumno (nombre, apellidos, fechanacimiento, ciclo) " +
-                "VALUES (?,?,?,?,?)";//Aquí generamos la sentencia de inserción de datos
+        String sentenciaSql = "INSERT INTO alumnosdb (nombre, apellidos, fechanacimiento, ciclo) " +
+                "VALUES (?,?,?,?)";//Aquí generamos la sentencia de inserción de datos
         PreparedStatement sentencia = null;
         try {//De nuevo, en el orden en que hayamos escrito los parámetros en la consulta asociaremos los valores que les correspondan
             sentencia = conexion.prepareStatement(sentenciaSql);
             //sentencia.setLong(1,alumno.getIdAlumno());
-            sentencia.setString(2,alumno.getNombre());
-            sentencia.setString(3,alumno.getApellidos());
-            sentencia.setDate(4,alumno.getSQLNacimiento());
-            sentencia.setInt(5, alumno.getCiclo());
+            sentencia.setString(1,alumno.getNombre());
+            sentencia.setString(2,alumno.getApellidos());
+            sentencia.setDate(3,alumno.getSQLNacimiento());
+            sentencia.setInt(4, alumno.getCiclo());
             sentencia.executeUpdate();
         } catch (SQLException sqle) {//Manejo de excepciones
             sqle.printStackTrace();
@@ -104,20 +104,20 @@ public class DBHelper {
     public void modificarUsuario(boolean mysql, Alumno usuario){
         Connection conexion;
         if(mysql){//Aquí seleccionamos si usamos MySQL o PostgreSQL
-            conexion=this.conectarMySQL("ejemplostema2","root","poflo123");
+            conexion=this.conectarMySQL("actividades","root","luisrodriguez");
         }
         else{
-            conexion=this.conectarPostgreSQL("ejemplostema2","aplicacion","poflo123");
+            conexion=this.conectarPostgreSQL("actividades","postgres","postgres");
         }
-        String sentenciaSql = "UPDATE usuario SET username=?, password=?, nombre=?, apellidos=?, dni=?, fechanacimiento=?" +
+        String sentenciaSql = "UPDATE alumnosdb SET nombre=?, apellidos=?, fechanacimiento=?, ciclo=?" +
                 " WHERE idusuario=?";//Aquí generamos la sentencia añadiendo una claúsula de búsqueda por idUsuario
         PreparedStatement sentencia = null;
         try {//Insertamos los parámetros en la sentencia teniendo en cuenta el orden en que se han escrito anteriormente
             sentencia = conexion.prepareStatement(sentenciaSql);
-            sentencia.setString(2,usuario.getNombre());
-            sentencia.setString(3,usuario.getApellidos());
-            sentencia.setDate(4,usuario.getSQLNacimiento());
-            sentencia.setInt(5,usuario.getCiclo());
+            sentencia.setString(1,usuario.getNombre());
+            sentencia.setString(2,usuario.getApellidos());
+            sentencia.setDate(3,usuario.getSQLNacimiento());
+            sentencia.setInt(4,usuario.getCiclo());
             sentencia.executeUpdate();//Ejecución de la sentencia
         } catch (SQLException sqle) {//Gestión de excepciones
             sqle.printStackTrace();
@@ -137,7 +137,7 @@ public class DBHelper {
 
     public Alumno getAlumnos(Connection conexion, long ide){
         String sentenciaSql = "SELECT idalumno, nombre, apellidos, fechanacimiento , ciclo" +
-                "FROM Alumno WHERE idalumno=?";//Creamos aquí la consulta incluyendo el parámetro de búsqueda
+                "FROM alumnosdb WHERE idalumno=?";//Creamos aquí la consulta incluyendo el parámetro de búsqueda
         PreparedStatement sentencia = null;
         ResultSet resultado = null;
         ArrayList<Alumno> alumnos=new ArrayList<>();//Creamos una lista vacía de Alumnos
@@ -177,8 +177,8 @@ public class DBHelper {
         }
     }
 
-    public ArrayList<Alumno> getUsuarios(Connection conexion){
-        String sentenciaSql = "SELECT idusuario, username, password, nombre, apellidos, dni, fechanacimiento FROM usuario";//Creamos la sentencia
+    public ArrayList<Alumno> getAlumnos(Connection conexion){
+        String sentenciaSql = "SELECT idusuario, nombre, apellidos, fechanacimiento, ciclo FROM alumnosdb";//Creamos la sentencia
         PreparedStatement sentencia = null;//Clase auxiliar para crear la consulta y pasarla al conector
         ResultSet resultado = null;//La ejecución de la consulta nos va a devolver un SET
         ArrayList<Alumno> alumnos=new ArrayList<>();//Creamos nuestro arraylist de usuarios vacío

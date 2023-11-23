@@ -13,7 +13,9 @@ import javax.xml.transform.stream.StreamResult;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class PrincipalController implements ActionListener, ListSelectionListener {
 
@@ -161,7 +163,16 @@ public class PrincipalController implements ActionListener, ListSelectionListene
 
                 modeloLista.add(modeloLista.getSize(),nombre+" "+apellidos+" "+fNacimiento+" "+ciclo);/*Aquí añadimos al final de la lista que
                 almacena la información que muestra el JList (sólo almacena Strings) un nuevo alumno en formato String*/
-                Alumno alumno=new Alumno(nombre,apellidos,fNacimiento,ciclo);//Creamos un objeto de la clase alumno con la información recogida
+                String pattern = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                Date fecha = null;
+                try{
+                    fecha = sdf.parse(fNacimiento);
+                }catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+                Alumno alumno=new Alumno(nombre,apellidos,fecha,ciclo);//Creamos un objeto de la clase alumno con la información recogida
                 alumnos.add(alumno);/*En nuestra lista de alumnos de la clase Alumno añadimos también
                 al final de la lista al nuevo alumno*/
                 if(mysql)
@@ -177,8 +188,19 @@ public class PrincipalController implements ActionListener, ListSelectionListene
             }
             else{/*Si el valor de la variable posición es mayor o igual que 0 es porque hemos seleccionado un alumno de la lista
             , por lo que nos limitaremos a editar su información*/
+
+
+                String pattern = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                Date fecha = null;
+                try{
+                    fecha = sdf.parse(fNacimiento);
+                }catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
                 modeloLista.set(posicion,nombre+" "+apellidos+" "+fNacimiento+ " "+ciclo);//Aquí editamos el alumno en la posición seleccionada en la lista del JList
-                Alumno alumno=new Alumno(nombre,apellidos,fNacimiento,ciclo);//Creamos aquí un objeto de la clase alumno con la nueva información
+                Alumno alumno=new Alumno(nombre,apellidos,fecha,ciclo);//Creamos aquí un objeto de la clase alumno con la nueva información
                 if(mysql)
                 {
                     dbHelper.modificarUsuario(true, alumno);
