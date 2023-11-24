@@ -44,6 +44,7 @@ public class PrincipalController implements ActionListener, ListSelectionListene
         vista.btGuardar.addActionListener(alistener);
         vista.btNuevo.addActionListener(alistener);
         vista.listaAlumnos.addListSelectionListener(llistener);
+        vista.eliminarButton.addActionListener(alistener);
 
     }
 
@@ -73,7 +74,7 @@ public class PrincipalController implements ActionListener, ListSelectionListene
                 vista.tfNombre.setText(alumno.getNombre());
                 vista.tfApellidos.setText(alumno.getApellidos());
                 vista.tfFNacimiento.setText((alumno.getfNacimiento()));
-
+                vista.cbCiclo.setSelectedIndex(alumno.getCiclo());
                 for (int i = 0; i < vista.cbCiclo.getItemCount(); i++)
                 {
                     String auxiliar = vista.cbCiclo.getItemAt(i);
@@ -145,12 +146,30 @@ public class PrincipalController implements ActionListener, ListSelectionListene
         return formateau;
     }
 
+    private void eliminarAlumno()
+    {
+        Alumno alumno = alumnos.get(vista.listaAlumnos.getSelectedIndex());
+        alumnos.remove(vista.listaAlumnos.getSelectedIndex());
+        boolean mysql = vista.mySQLCheckBox.isSelected();
+        boolean postgr = vista.PSQLCheckBox.isSelected();
+
+        if(mysql)
+        {
+            dbHelper.eliminarUsuario(mysql, alumno.getIdAlumno());
+        }
+        if(!postgr)
+        {
+            dbHelper.eliminarUsuario(false,alumno.getIdAlumno());
+        }
+    }
+
 
     private void guardarAlumno(){//Aquí nos quedamos
         String nombre=vista.tfNombre.getText();//Aquí recuperamos la información que hay en el campo de texto nombre
         String apellidos=vista.tfApellidos.getText();//Aquí recuperamos la información que hay en el campo de texto DNI
         String fNacimiento = vista.tfFNacimiento.getText();
         int ciclo = vista.cbCiclo.getSelectedIndex();
+        long idalumno = 0;
         boolean fechaformateada = fechaFormateada();
         boolean mysql = vista.mySQLCheckBox.isSelected();
         boolean psql = vista.PSQLCheckBox.isSelected();
@@ -193,6 +212,7 @@ public class PrincipalController implements ActionListener, ListSelectionListene
                 String pattern = "dd-MM-yyyy";
                 SimpleDateFormat sdf = new SimpleDateFormat(pattern);
                 Date fecha = null;
+                idalumno = alumnos.get(vista.listaAlumnos.getSelectedIndex()).getIdAlumno();
                 try{
                     fecha = sdf.parse(fNacimiento);
                 }catch(Exception e)
@@ -201,6 +221,7 @@ public class PrincipalController implements ActionListener, ListSelectionListene
                 }
                 modeloLista.set(posicion,nombre+" "+apellidos+" "+fNacimiento+ " "+ciclo);//Aquí editamos el alumno en la posición seleccionada en la lista del JList
                 Alumno alumno=new Alumno(nombre,apellidos,fecha,ciclo);//Creamos aquí un objeto de la clase alumno con la nueva información
+                alumno.setIdAlumno(idalumno);
                 if(mysql)
                 {
                     dbHelper.modificarUsuario(true, alumno);

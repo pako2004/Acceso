@@ -16,6 +16,7 @@ public class Principal {
     JPanel panelPrincipal;
     JCheckBox mySQLCheckBox;
     JCheckBox PSQLCheckBox;
+    JButton eliminarButton;
     JButton btPrimero;
     JButton btAnterior;
     JButton btSiguiente;
