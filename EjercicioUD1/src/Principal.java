@@ -14,6 +14,9 @@ public class Principal {
     JLabel lFNacimiento;
     JLabel lCiclo;
     JPanel panelPrincipal;
+    JCheckBox mySQLCheckBox;
+    JCheckBox PSQLCheckBox;
+    JButton eliminarButton;
     JButton btPrimero;
     JButton btAnterior;
     JButton btSiguiente;
